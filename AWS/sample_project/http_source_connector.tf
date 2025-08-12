@@ -16,7 +16,7 @@ resource "confluent_connector" "http_source" {
   # Enhanced connector configuration
   config_nonsensitive = {
     "connector.class"     = "HttpSource"
-    "name"                = "HttpSourceConnector_${var.aws_cluster_name}_${each.key}_${local.project_name}"
+    "name"                = "HttpSource_${each.key}"
     "kafka.auth.mode"     = "KAFKA_API_KEY"
     "kafka.api.key"       = var.admin_kafka_api_key_id
     "topic.name.pattern"  = "${var.aws_topic_base_prefix}.${each.key}.${local.project_name}.http_source_data.source-connector.0"

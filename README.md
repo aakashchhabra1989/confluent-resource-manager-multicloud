@@ -375,8 +375,63 @@ terraform state list
 - 💬 [Confluent Community Forum](https://forum.confluent.io)
 - 🎓 [Confluent Developer Portal](https://developer.confluent.io)
 
-## 📈 **Next Steps**
+## 🔐 **Project-Specific ACLs for Development Teams**
 
+We have implemented granular Access Control Lists (ACLs) for each project to provide secure, isolated access for development teams.
+
+### **Overview**
+- **AWS Sample Project**: Dedicated service accounts and ACLs for AWS cluster
+- **Azure Sample Project**: Dedicated service accounts and ACLs for Azure cluster
+- **Granular Permissions**: Separate producer and consumer access
+- **Pattern-Based Security**: Topic and consumer group patterns for isolation
+
+### **Service Accounts Created**
+
+For each project and environment, the following service accounts are created:
+
+#### AWS Sample Project
+- `aws-sample-project-producer-{environment}` - For producing data
+- `aws-sample-project-consumer-{environment}` - For consuming data
+
+#### Azure Sample Project  
+- `azure-sample-project-producer-{environment}` - For producing data
+- `azure-sample-project-consumer-{environment}` - For consuming data
+
+### **Access Patterns**
+
+#### Topic Patterns
+- **AWS**: `aws.*.sample_project.*` (e.g., `aws.dev.sample_project.user_events.0`)
+- **Azure**: `azure.*.sample_project.*` (e.g., `azure.dev.sample_project.user_events.0`)
+
+#### Consumer Group Patterns
+- **AWS**: `aws-sample-project-*` (e.g., `aws-sample-project-user-service`)
+- **Azure**: `azure-sample-project-*` (e.g., `azure-sample-project-analytics-app`)
+
+### **Getting Development Team Credentials**
+
+```bash
+# Get access information for development teams
+terraform output aws_sample_project_access
+terraform output azure_sample_project_access
+
+# Get sensitive API key secrets (for secure sharing)
+terraform output -json aws_sample_project_producer_secret
+terraform output -json aws_sample_project_consumer_secret
+terraform output -json azure_sample_project_producer_secret
+terraform output -json azure_sample_project_consumer_secret
+```
+
+### **Usage Documentation**
+
+📋 **For detailed usage instructions, see**: [`PROJECT_ACLS_GUIDE.md`](./PROJECT_ACLS_GUIDE.md)
+
+This guide includes:
+- Complete setup instructions for development teams
+- Application configuration examples
+- Security best practices
+- Troubleshooting guide
+
+## 📈 **Next Steps**
 1. **Connect Applications**: Use the bootstrap endpoints to connect your applications
 2. **Explore Flink**: Try stream processing with the deployed Flink pools
 3. **Add Custom Topics**: Create your own topics and schemas

@@ -16,7 +16,7 @@ resource "confluent_connector" "azure_http_source" {
 
   config_nonsensitive = {
     "connector.class"          = "HttpSource"
-    "name"                = "HttpSourceConnector_${var.cluster_name}-${each.key}-${local.project_name}"
+    "name"                = "HttpSource_${each.key}"
     "kafka.auth.mode"          = "SERVICE_ACCOUNT"
     "kafka.service.account.id" = var.app_service_account_id
     "url"                      = "https://jsonplaceholder.typicode.com/users"
@@ -24,7 +24,7 @@ resource "confluent_connector" "azure_http_source" {
     "http.url"                 = "https://jsonplaceholder.typicode.com/users"
     "http.method"              = "GET"
     "http.headers"             = "Content-Type:application/json"
-    "http.request.interval.ms" = "60000"
+    "http.request.interval.ms" = "600000"
     "http.offset.mode"         = "SIMPLE_INCREMENTING"
     "http.initial.offset"      = "0"
     "kafka.topic"              = "${var.topic_prefix}.${each.key}.${local.project_name}.http_source_data.source-connector.0"

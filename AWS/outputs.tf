@@ -42,6 +42,17 @@ output "admin_service_account_name" {
   value       = confluent_service_account.admin_manager.display_name
 }
 
+# Project-Specific Service Account Outputs for Development Teams
+output "aws_sample_project_app_service_account_id" {
+  description = "The ID of the AWS sample project application service account (producer + consumer)"
+  value       = confluent_service_account.aws_sample_project_app.id
+}
+
+output "aws_sample_project_app_service_account_name" {
+  description = "The name of the AWS sample project application service account (producer + consumer)"
+  value       = confluent_service_account.aws_sample_project_app.display_name
+}
+
 # API Key Outputs
 output "kafka_api_key_id" {
   description = "The ID of the app manager Kafka API key"
@@ -76,6 +87,19 @@ output "admin_kafka_api_key_id" {
 output "admin_kafka_api_key_secret" {
   description = "The secret of the admin Kafka API key"
   value       = confluent_api_key.admin_kafka_api_key.secret
+  sensitive   = true
+}
+
+# Project-Specific API Key Outputs (Sensitive)
+output "aws_sample_project_app_api_key_id" {
+  description = "The API Key ID for AWS sample project application (producer + consumer)"
+  value       = confluent_api_key.aws_sample_project_app_api_key.id
+  sensitive   = true
+}
+
+output "aws_sample_project_app_api_key_secret" {
+  description = "The API Key secret for AWS sample project application (producer + consumer)"
+  value       = confluent_api_key.aws_sample_project_app_api_key.secret
   sensitive   = true
 }
 
@@ -158,5 +182,42 @@ output "flink_compute_pool_id" {
 #   description = "The names of the HTTP source connectors"
 #   value       = module.sample_project.http_source_connector_names
 # }
+
+# Project-Specific Topic Patterns for Development Teams
+output "aws_sample_project_topic_pattern" {
+  description = "The topic pattern that AWS sample project teams can access"
+  value       = "aws.*.sample_project.*"
+}
+
+output "aws_sample_project_consumer_group_pattern" {
+  description = "The consumer group pattern that AWS sample project teams can use"
+  value       = "aws-sample-project-*"
+}
+
+# Structured output for easier credential management by development teams
+output "aws_sample_project_access" {
+  description = "Complete access information for AWS sample project development teams"
+  value = {
+    cluster_info = {
+      cluster_id         = confluent_kafka_cluster.basic.id
+      bootstrap_endpoint = confluent_kafka_cluster.basic.bootstrap_endpoint
+    }
+    application = {
+      service_account_id = confluent_service_account.aws_sample_project_app.id
+      api_key_id         = confluent_api_key.aws_sample_project_app_api_key.id
+    }
+    access_patterns = {
+      topic_pattern          = "aws.sample_project.*"
+      consumer_group_pattern = "aws-sample-project-*"
+    }
+  }
+}
+
+# Sensitive credentials (separate output)
+output "aws_sample_project_secret" {
+  description = "API key secret for AWS sample project (sensitive)"
+  value       = confluent_api_key.aws_sample_project_app_api_key.secret
+  sensitive   = true
+}
 
 
